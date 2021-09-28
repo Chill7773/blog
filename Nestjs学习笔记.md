@@ -44,7 +44,7 @@
   @UseInterceptors(FileInterceptor('file')) // 使用`UseInterceptors`装饰器,其中file是前端选择文件按钮的name属性
   doAdd(@Body() body, @UploadedFile() file) {
       const cw = createWriteStream(join(__dirname, '../../public', `${file.originalname}`)) // 创建文档写入流
-      cw.write(file.buffer) 写入文件
+      cw.write(file.buffer) //写入文件
       return 'success'
   }
   ```
