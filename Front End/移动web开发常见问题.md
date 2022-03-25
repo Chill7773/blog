@@ -80,9 +80,27 @@ useEffect(() => {
 
 ## 移动端调试工具
 
+- **(个人推荐)** [Eruda](https://github.com/liriliri/eruda)
+- [vConsole](https://github.com/Tencent/vConsole)
+- [spy-debugger](https://github.com/wuchangming/spy-debugger)
+
 ## 响应式解决方案
 
+- `media-query` ，根据不同的屏幕宽度设置根元素 font-size。
+
+- **(推荐)** 使用 `viewport` 单位 (vw, vh, vmin, vmax)
+
+  - 推荐[postcss-px-to-viewport](https://github.com/evrone/postcss-px-to-viewport) _（一款 PostCSS 插件，用于将 px 单位转化为 vw/vh 单位。）_
+
+- `rem` 布局
+
+  - [postcss-pxtorem](https://github.com/cuth/postcss-pxtorem)（一款 PostCSS 插件，用于将 px 单位转化为 rem 单位）
+  - [lib-flexible](https://github.com/amfe/lib-flexible) _（用于设置 rem 基准值，官方已放弃维护，推荐 viewport 方案）_
+
 ## 常用开源 UI 组件库
+
+- [Vant](https://youzan.github.io/vant/#/zh-CN/home) (Vue)
+- [Ant Design Mobile](https://mobile.ant.design/zh)(React)
 
 ## meta 使用总结
 
