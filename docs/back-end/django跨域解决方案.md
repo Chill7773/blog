@@ -1,10 +1,8 @@
-# django跨域解决方案
+# django 跨域解决方案
 
 1. 安装`django-cors-headers`
 
-   
-
-2. settings.py文件中配置：
+2. settings.py 文件中配置：
 
 ```python
 INSTALLED_APPS = [
