@@ -227,19 +227,155 @@ Function.prototype.bind1 = function () {
 
 ## 异步
 
+####
+
 ## Web API
 
 ### DOM 操作
 
+#### DOM 是哪种数据结构
+
+- 树（DOM 树）
+
+#### DOM 操作常用 API
+
+- DOM 节点操作：获取节点；操作 `attribute` 和 `property`
+- DOM 结构操作：新增/插入节点；获取子元素/父元素；删除子元素
+
+#### attribute 和 property 的区别
+
+- property：修改对象属性，不会体现到 html 结构中
+- attribute：修改 html 属性，会修改 html 结构
+- 两者都有可能引起 DOM 重新渲染
+
+#### 一次性插入多个节点，考虑性能
+
+- 使用 `document.createDocumentFragment()`
+- 考虑缓存 DOM 查询
+
 ### BOM 操作
 
-### 事件绑定
+知识点：`navigator`; `screen`; `location`; `history`;
+
+#### 如何识别浏览器类型
+
+- 使用`navigator.userAgent`
+
+#### 分析拆解 url 各个部分
+
+```js
+console.log(location.href);
+console.log(location.protocol);
+console.log(location.pathname);
+console.log(location.search);
+console.log(location.hash);
+```
+
+### DOM 事件
+
+知识点：事件代理；事件冒泡；事件绑定；
+
+#### 手写通用的事件监听函数
+
+```js
+function bindEvent(elem, type, selector, fn) {
+  if (fn == null) {
+    fn = selector;
+    selector = null;
+  }
+  elem.addEventListener(type, (event) => {
+    const target = event.target;
+    if (selector) {
+      // 代理绑定
+      if (target.matches(selector)) {
+        fn.call(target, event);
+      }
+    } else {
+      // 普通绑定
+      fn.call(target, event);
+    }
+  });
+}
+
+// 普通绑定
+const btn1 = document.getElementById("btn1");
+bindEvent(btn1, "click", function (event) {
+  // console.log(event.target) // 获取触发的元素
+  event.preventDefault(); // 阻止默认行为
+  alert(this.innerHTML);
+});
+
+// 代理绑定
+const div3 = document.getElementById("div3");
+bindEvent(div3, "click", "a", function (event) {
+  event.preventDefault();
+  alert(this.innerHTML);
+});
+```
+
+#### 事件冒泡流程
+
+- 基于 DOM 树形结构
+- 事件会顺着触发元素向上冒泡
+- 应用场景：事件代理
+
+#### 无限下拉图片列表，如何监听每个图片点击
+
+- 事件代理
+- 用`e.target` 获取触发元素
+- 用`matches`来判断是否是触发元素
 
 ### ajax
 
+#### 手写简易`ajax`
+
+```js
+function ajax(url) {
+  const p = new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function () {
+      // 0 - UNSET 尚未调用open方法
+      // 1 - OPENED open方法已经被调用
+      // 2 - HEADERS_RECEIVED send 方法已被调用，header已被接收
+      // 3 - LOADING 下载中，responseText已有部分内容
+      // 4 - DONE 下载完成
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          resolve(JSON.parse(xhr.responseText));
+        } else if (xhr.status === 404 || xhr.status === 500) {
+          reject(new Error("404 not found"));
+        }
+      }
+    };
+    xhr.send(null);
+  });
+  return p;
+}
+```
+
+#### 跨域的常用实现方式
+
+1. 同源策略
+
+> - ajax 请求时，浏览器要求当前网页和 server 必须同源
+> - 同源：协议、域名、端口，三者必须一致
+> - 加载图片（可用于第三方服务统计打点） js（JSONP、CDN） css（CDN） 可无视同源策略
+> - 所有的跨域必须经过 server 端的允许和配合
+
+2. JSONP
+
+> - 服务器可以任意拼接数据返回，只要符合 html 格式要求
+> - 同理与 `<script src=""></script>`，其可以绕过跨域
+> - 所以`<script>`可以获取跨域的数据，只要服务端愿意
+
+3. CORS
+
+> - 服务器端设置 http header
+
 ### 存储
 
-##### `cookie`
+#### `cookie`
 
 - 本身用于浏览器和 server 通讯
 - 被“借用”到本地存储来
@@ -251,7 +387,7 @@ Function.prototype.bind1 = function () {
 > - http 请求时需要发送到服务端，增加数据请求量
 > - 只能用`document.cookie = '...'`来修改（也可以用一些封装好的库操作）
 
-##### `localStorage`和`sessionStorage`
+#### `localStorage`和`sessionStorage`
 
 - HTML5 专门为存储而设计，最大可存 5M
 - API 简单易用 `setItem` 、`getItem`
@@ -371,16 +507,84 @@ Function.prototype.bind1 = function () {
 
 ## 运行环境
 
-### 网页加载过程
-
 #### 从输入 url 到渲染出页面的整个过程
 
-1.
+- 下载资源：各个资源类型下载
+- 渲染页面：结合 html css js 图片等
 
 #### window.onload 和 DOMContentLoaded 的区别
 
-### 性能优化
+- window.onload：资源全部加载完成才能执行，包括图片
+- DOMContentLoaded：DOM 渲染完成即可，图片可能尚未下载
 
-### web 安全
+#### 性能优化
+
+1. 原则：
+
+> - 多使用内存、缓存其他方法
+> - 减少 CPU 计算量，减少网络加载耗时
+
+2. 让加载更快
+
+> - 减少资源体积：压缩代码
+> - 减少访问次数：合并代码，SSR，缓存
+> - 使用更快的网络：CDN
+
+3. 让渲染更快
+
+> - CSS 放在 head，JS 放在 body 最下面
+> - 尽早开始执行 JS，用 DOMContentLoaded 触发
+> - 懒加载
+> - 对 DOM 查询进行缓存
+> - 频繁的 DOM 操作，合并到一起插入 DOM 结构
+> - 节流 throttle；防抖 debounce
+
+#### 手写防抖 debounce
+
+```js
+// 防抖
+function debounce(fn, delay = 500) {
+  // timer 是闭包中的
+  let timer = null;
+
+  return function () {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, arguments);
+      timer = null;
+    }, delay);
+  };
+}
+```
+
+#### 手写节流 throttle
+
+```js
+// 节流
+function throttle(fn, delay = 100) {
+  let timer = null;
+
+  return function () {
+    if (timer) {
+      return;
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, arguments);
+      timer = null;
+    }, delay);
+  };
+}
+```
+
+#### 预防 XSS 跨站请求攻击
+
+- 替换特殊字符: 如`<`变为`&lt;`，`>`变为`&gt;`
+
+#### 预防 XSRF 跨站请求伪造
+
+- 使用 post 接口
+- 增加验证：密码，指纹，短信验证码等
 
 ## Others
