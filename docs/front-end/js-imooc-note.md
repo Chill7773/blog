@@ -88,6 +88,7 @@ const xialuo = new Student();
 ```
 
 对应的原型链：
+
 <img src="/images/front-end/2022-04-03-prototype-chain.png" width="750px"/>
 
 #### 手写 jQuery
@@ -270,6 +271,116 @@ Function.prototype.bind1 = function () {
 
 ## http
 
+#### http 状态码
+
+1. 分类
+
+> - 1xx 服务器收到请求
+> - 2xx 请求成功
+> - 3xx 重定向
+> - 4xx 客户端错误
+> - 5xx 服务端错误
+
+2. 常见状态码
+
+> - 200 成功
+> - 301 永久重定向（配合 location，浏览器自动处理）
+> - 302 临时重定向（配合 location，浏览器自动处理）
+> - 304 资源未被修改
+> - 404 资源未找到
+> - 403 没有权限
+> - 500 服务器错误
+> - 504 网关超时
+
+#### http methods
+
+1. 传统的 methods
+
+> - get 获取服务端数据
+> - post 向服务器提交数据
+
+2.  现在的 methods
+
+> - get 获取数据
+> - post 新建数据
+> - patch/put 更新数据
+> - delete 删除数据
+
+3.  Restful API
+
+> - 一种 API 设计方法
+> - 传统 API 设计：把每个 url 当做一个功能
+> - Restful API 设计：把每个 url 当做一个唯一的资源：
+> - 尽量不使用 url 参数
+> - 使用 method 表示操作类型
+
+#### http headers
+
+1. 常见的 Response Headers：
+
+> - Content-type 返回数据的格式，如`application/json`
+> - Content-length 返回数据的大小，多少字节
+> - Content-Ecoding 返回数据的压缩算法，如 gzip
+> - Set-Cookie 服务端修改 cookie
+> - 缓存相关：`Cache-Control`, `Expires`, `Last-Modified`, `If-Modified-Since`, `Etag`, `If-None-Match`
+
+2. 常见的 Request Headers：
+
+> - Accept 浏览器可接收的数据格式
+> - Accept-Ecoding 浏览器可接收的压缩算法，如：gzip
+> - Accept-Language 浏览器可接收的语言，如：zh-CN
+> - `Connection:keep-alive` 一次 TCP 连接重复使用
+> - cookie
+> - Host
+> - User-Agent（UA）浏览器信息
+> - Content-type 发送数据的格式，如`application/json`
+
+#### http 缓存
+
+1. http 缓存策略 - 强制缓存
+
+> - `Cache-Control`控制强制缓存的逻辑：`max-age`,`no-cache`,`no-store`,`public`,`private`
+> - `Expires`控制缓存过期（已被`Cache-Control`代替）
+
+2. http 缓存策略 - 协商缓存
+
+> - 服务端缓存策略
+> - 服务器判断客户端资源，是否和服务器资源一样
+> - 一致则返回 304，否则返回 200 和最新资源
+> - 资源标识：`Last-Modified`-资源的最后修改时间，`Etag`-资源的唯一标识 ，共存优先使用`Etag`
+
+<img src="/images/front-end/2022-04-04-http-cache.png" width="750px"/>
+
+3. 刷新操作对缓存的影响
+
+> - 三种刷新操作：1. 正常操作：地址栏输入、前进后退和链接跳转等；2.手动刷新：`F5`；3. 强制刷新：`crtl + F5`；
+> - 正常操作：强制缓存有效、协商缓存有效
+> - 手动刷新：强制缓存失效、协商缓存有效
+> - 强制刷新：强制缓存失效、协商缓存失效
+
+#### https
+
+1. http 和 https
+
+> - http 是明文传输，容易被劫持
+> - https = http + 加密，劫持了也无法解密
+
+2. 加密方式
+
+<img src="/images/front-end/2022-04-04-https.png" width="750px"/>
+
 ## 运行环境
+
+### 网页加载过程
+
+#### 从输入 url 到渲染出页面的整个过程
+
+1.
+
+#### window.onload 和 DOMContentLoaded 的区别
+
+### 性能优化
+
+### web 安全
 
 ## Others
