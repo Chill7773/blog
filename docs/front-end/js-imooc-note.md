@@ -227,7 +227,237 @@ Function.prototype.bind1 = function () {
 
 ## 异步
 
-####
+#### event loop（事件循环/事件轮询）
+
+1. 什么是 event loop
+
+> - JS 是单线程运行的
+> - 异步要基于回调来实现
+> - event loop 就是异步回调的实现原理
+
+2. DOM 事件和 event loop
+
+> - 异步（setTimeout, ajax 等）使用回调，基于 event loop
+> - DOM 事件也使用回调，基于 event loop
+
+3. event loop 过程
+
+> - 同步代码，一行一行放在 Call Stack 执行
+> - 遇到异步，会先记录下，等待时机
+> - 时机到了，移动到 Callback Queue
+> - 如 Call Stack 为空（即同步代码执行完成），event loop 开始工作
+> - 轮询查找 Callback Queue，如有则移动到 Call Back 执行
+> - 然后继续轮询查找
+
+#### Promise
+
+1. 关于`then`和`catch`面试题
+
+```js
+// 第一题
+Promise.resolve()
+  .then(() => {
+    console.log(1);
+  })
+  .catch(() => {
+    console.log(2);
+  })
+  .then(() => {
+    console.log(3);
+  });
+// Output:
+// 1
+// 3
+
+// 第二题
+Promise.resolve()
+  .then(() => {
+    // 返回 rejected 状态的 promise
+    console.log(1);
+    throw new Error("erro1");
+  })
+  .catch(() => {
+    // 返回 resolved 状态的 promise
+    console.log(2);
+  })
+  .then(() => {
+    console.log(3);
+  });
+// Output:
+// 1
+// 2
+// 3
+
+// 第三题
+Promise.resolve()
+  .then(() => {
+    // 返回 rejected 状态的 promise
+    console.log(1);
+    throw new Error("erro1");
+  })
+  .catch(() => {
+    // 返回 resolved 状态的 promise
+    console.log(2);
+  })
+  .catch(() => {
+    console.log(3);
+  });
+// Output:
+// 1
+// 2
+```
+
+#### async - await
+
+> - async/await 使用同步语法，消灭回调函数
+> - 执行 async 函数，返回的是 Promise 对象
+> - await 相当于 Promise 中的 then
+> - try...catch 可捕获异常，代替 Promise 的 catch
+
+#### 宏任务 macroTask 和微任务 microTask
+
+1. 什么是宏任务和微任务
+
+> - 宏任务：`setTimeout`,`setInterval`,`ajax`,DOM 事件
+> - 微任务：`Promise`, `async/await`
+> - 微任务执行时机比宏任务早
+
+2. event loop 和 DOM 渲染
+
+> - 每次 Call Stack 清空（即每次轮询结束），即同步任务执行完
+> - 都是 DOM 重新渲染的机会，DOM 结构如有改变则重新渲染
+> - 然后再去触发下一次 Event Loop
+
+3. 微任务和宏任务区别
+
+> - 宏任务：DOM 渲染后触发
+> - 微任务：DOM 渲染前触发
+
+#### 手写 Promise
+
+```js
+class MyPromise {
+  state = "pending"; // 状态，'pending' 'fulfilled' 'rejected'
+  value = undefined; // 成功后的值
+  reason = undefined; // 失败后的值
+
+  resolveCallbacks = []; // pending状态下，存储成功的回调
+  rejectCallbacks = []; // pending状态下，存储失败的回调
+
+  constructor(fn) {
+    const resolveHandler = (value) => {
+      if (this.state === "pending") {
+        this.state = "fulfilled";
+        this.value = value;
+        this.resolveCallbacks.forEach((fn) => fn(this.value));
+      }
+    };
+    const rejectHandler = (reason) => {
+      if (this.state === "pending") {
+        this.state = "rejected";
+        this.reason = reason;
+        this.rejectCallbacks.forEach((fn) => fn(this.reason));
+      }
+    };
+    try {
+      fn(resolveHandler, rejectHandler);
+    } catch (error) {
+      rejectHandler(error);
+    }
+  }
+
+  then(fn1, fn2) {
+    // 当pending状态下，fn1 fn2会被存储到 callbacks 中
+    fn1 = typeof fn1 === "function" ? fn1 : (v) => v;
+    fn2 = typeof fn2 === "function" ? fn2 : (v) => v;
+
+    if (this.state === "pending") {
+      return new MyPromise((resolve, reject) => {
+        this.resolveCallbacks.push(() => {
+          try {
+            const newValue = fn1(this.value);
+            resolve(newValue);
+          } catch (error) {
+            reject(error);
+          }
+        });
+
+        this.rejectCallbacks.push(() => {
+          try {
+            const newReason = fn2(this.reason);
+            reject(newReason);
+          } catch (error) {
+            reject(error);
+          }
+        });
+      });
+    }
+    if (this.state === "fulfilled") {
+      return new MyPromise((resolve, reject) => {
+        try {
+          const newValue = fn1(this.value);
+          resolve(newValue);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+    if (this.state === "rejected") {
+      return new MyPromise((resolve, reject) => {
+        try {
+          const newReason = fn2(this.reason);
+          reject(newReason);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+  }
+
+  catch(fn) {
+    return this.then(undefined, fn);
+  }
+}
+
+MyPromise.resolve = (value) => {
+  return new MyPromise((resolve, reject) => resolve(value));
+};
+
+MyPromise.reject = (reason) => {
+  return new MyPromise((resolve, reject) => reject(reason));
+};
+
+MyPromise.all = (promiseList = []) => {
+  return new MyPromise((resolve, reject) => {
+    const result = [];
+    const length = promiseList.length;
+    let resolvedCount = 0;
+    promiseList.forEach((p) => {
+      p.then((data) => {
+        result.push(data);
+        resolvedCount++;
+        if (resolvedCount === length) {
+          resolve(result);
+        }
+      }).catch((err) => reject(err));
+    });
+  });
+};
+
+MyPromise.race = (promiseList = []) => {
+  let resolved = false;
+  return new MyPromise((resolve, reject) => {
+    promiseList.forEach((p) => {
+      p.then((data) => {
+        if (!resolved) {
+          resolve(data);
+          resolved = true;
+        }
+      }).catch((err) => reject(err));
+    });
+  });
+};
+```
 
 ## Web API
 
@@ -588,3 +818,105 @@ function throttle(fn, delay = 100) {
 - 增加验证：密码，指纹，短信验证码等
 
 ## Others
+
+#### var 和 let const 的区别
+
+- var 是 ES5 语法，let const 是 ES6 语法；var 有变量提升
+- var 和 let 是变量，可修改；const 是常量，不可修改；
+- let const 有块级作用域，var 没有
+
+#### typeof 能判断哪些类型
+
+- undefined string number boolean symbol
+- object （注意 typeof null === 'object'）
+- function
+
+#### 列举强制类型转换和隐式类型转换
+
+- 强制：parseInt、parseFloat、toString 等
+- 隐式：if、逻辑运算、==、+拼接字符串
+
+#### 手写深度比较，模拟 lodash isEqual
+
+```js
+const isEqual = (obj1, obj2) => {
+  const isObject = (obj) => typeof obj === "object" && obj !== null;
+
+  if (!isObject(obj1) || !isObject(obj2)) return obj1 === obj2;
+  if (obj1 === obj2) return true;
+  if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
+
+  for (let key in obj1) {
+    const res = isEqual(obj1[key], obj2[key]);
+    if (!res) return false;
+  }
+  return true;
+};
+```
+
+#### 数组 slice 和 splice 区别
+
+- 功能区别（slice - 切片，splice - 剪接）
+- 参数返回值不同
+- slice 是纯函数；splice 不是，有副作用
+
+#### 闭包有何影响？
+
+- 变量会常驻内存，得不到释放。闭包不要乱用
+
+#### 函数声明和函数表达式的区别
+
+- 函数声明：`function fn() {}`
+- 函数表达式：`const fn = function() {}`
+- 函数声明会在代码执行前预加载，而函数表达式不会
+
+#### new Object() 和 Object.create()的区别
+
+- `{}` 等同于 `new Object()`，原型 `Object.prototype`
+- `Object.create(null)` 没有原型
+- `Object.create({...})` 可指定原型
+
+#### 手写字符串 trim
+
+```js
+String.prototype.trim1 = function () {
+  return this.replace(/^\s+/, "").replace(/\s+$/, "");
+};
+```
+
+#### 如何使用 JS 实现继承
+
+- class 继承
+- prototype 继承
+
+#### 介绍 RAF requestAnimationFrame
+
+- 想要动画流畅，更新频率要 60 帧/s，即 16.67ms 更新一次视图
+- setTimeout 要手动控制频率，而 RAF 浏览器自动控制
+- 后台标签或隐藏 iframe 中 ，RAF 会暂停，而 setTimeout 依然执行
+
+```js
+function animate() {
+  /* 略 */
+  window.requestAnimationFrame(animate); // animate 执行频率不用自己控制
+}
+animate();
+```
+
+#### Map 和 Object 区别
+
+- API 不同，Map 可以以任意类型为 key
+- Map 是有序结构
+- Map 操作同样很快
+
+#### Set 和数组的区别
+
+- API 不同
+- Set 元素不能重复
+- Set 是无序结构
+
+#### WeakMap 和 WeakSet
+
+- 弱引用，防止内存泄漏
+- WeakMap 只能用对象作为 key，WeakSet 只能用对象做 value
+- 没有 forEach、size，只能用 add、delete、has
