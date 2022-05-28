@@ -18,6 +18,8 @@
 
 [gulp 常用插件](docs/front-end/engineering/gulp常用插件.md)
 
+[如何初始化一个前端工程](docs/front-end/engineering/如何初始化一个前端工程.md)
+
 #### 小程序
 
 [使用 typescript 开发微信小程序](docs/front-end/mini-program/使用typescript开发微信小程序.md)
