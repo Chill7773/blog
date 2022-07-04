@@ -20,6 +20,8 @@
 
 [如何初始化一个前端工程](docs/front-end/engineering/如何初始化一个前端工程.md)
 
+[前端规范设计(react)](docs/front-end/engineering/%E5%89%8D%E7%AB%AF%E8%A7%84%E8%8C%83%E8%AE%BE%E8%AE%A1(react).md)
+
 #### 小程序
 
 [使用 typescript 开发微信小程序](docs/front-end/mini-program/使用typescript开发微信小程序.md)
