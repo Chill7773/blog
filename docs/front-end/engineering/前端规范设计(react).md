@@ -1,4 +1,17 @@
-[TOC]
+- [前端设计规范](#前端设计规范)
+  - [`prettier`规范配置](#prettier规范配置)
+  - [`stylelint`规范配置](#stylelint规范配置)
+  - [`eslint`规范配置](#eslint规范配置)
+    - [`React + JS`规范配置](#react--js规范配置)
+    - [`React + TS`规范配置](#react--ts规范配置)
+    - [`umi`框架中的规范配置](#umi框架中的规范配置)
+  - [其他规范](#其他规范)
+    - [promise 的使用，避免回调地狱](#promise-的使用避免回调地狱)
+    - [使用 jsDoc 注释](#使用-jsdoc-注释)
+    - [避免在`window`上挂载全局变量](#避免在window上挂载全局变量)
+    - [文件行数控制](#文件行数控制)
+    - [后缀名区分文件功能](#后缀名区分文件功能)
+  - [项目目录结构](#项目目录结构)
 
 # 前端设计规范
 
@@ -105,11 +118,98 @@
 
 ### `React + JS`规范配置
 
-- 安装相关依赖，具体依赖如下：
-  > `@babel/eslint-parser` - eslint 解析器，需要额外安装`@babel/core`使其生效
-  > `eslint-config-airbnb` - 爱彼迎开源的 eslint 配置
+1. 安装相关依赖，主要依赖如下：
+
+   > `@babel/eslint-parser` - eslint 解析器，需要额外安装`@babel/core`使其生效
+   > `eslint-config-airbnb` - 爱彼迎开源的 eslint 配置
+
+2. 如果使用的 npm 版本号大于 5.x.x，建议在使用前使用`npm info "@babel/eslint-parser" peerDependencies`、`npm info "eslint-config-airbnb" peerDependencies`命令查找其`peerDependencies`进行安装。
+
+3. 如果`@babel/eslint-parser`出现解析失败，需要安装`@babel/preset-env`、`@babel/preset-react`，并新建`.bablerc.js`文件，进行以下配置：
+
+   in`.bablerc.js`:
+
+   ```js
+   module.exports = {
+     presets: ["@babel/preset-react", "@babel/preset-env"],
+   };
+   ```
+
+4. 依赖安装命令(可能会随着插件版本更新有所出入，建议使用`peerDependencies`查看的方式):
+
+   ```text
+   安装解析器: npm i eslint @babel/core @babel/eslint-parser --save-dev
+   安装babel预设（如有配置可忽略）：npm i @babel/preset-env @babel/preset-react --save-dev
+   安装eslint 配置插件：npm i eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks --save-dev
+   ```
+
+5. 进行`.eslintrc.js` 配置:
+
+   ```js
+   module.exports = {
+     root: true,
+     env: {
+       browser: true,
+       node: true,
+       es6: true,
+     },
+     /* 指定如何解析语法 */
+     parser: "@babel/eslint-parser",
+     /* 继承airbnb的规则 */
+     extends: ["airbnb", "airbnb/hooks"],
+     /**
+      * 下面可以根据自己的开发习惯开启一些规则检查，不建议关闭规则（除非不得已）
+      * "off" 或 0    ==>  关闭规则
+      * "warn" 或 1   ==>  打开的规则作为警告（不影响代码执行）
+      * "error" 或 2  ==>  规则作为一个错误（在配置lint的插件后代码不能执行，界面报错，不建议配置，影响开发调试效率）
+      */
+     rules: {
+       "no-console": 1,
+     },
+   };
+   ```
 
 ### `React + TS`规范配置
+
+1. 安装相关依赖，主要依赖如下：
+
+   > `@typescript-eslint/parser` - eslint 解析器，可允许 eslint 对 TS 代码解析
+   > `eslint-config-airbnb` - 爱彼迎开源的 eslint 配置
+
+2. 参考上面的`2`、`3`步：**TS 项目可以不必配置 babel**
+
+3. 依赖安装命令(可能会随着插件版本更新有所出入，建议使用`peerDependencies`查看的方式):
+
+   ```text
+   安装解析器: npm i eslint @typescript-eslint/parser --save-dev
+   安装eslint 配置插件：npm i eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks --save-dev
+   ```
+
+4. 进行`.eslintrc.js` 配置:
+
+   ```js
+   module.exports = {
+     root: true,
+     env: {
+       browser: true,
+       node: true,
+       es6: true,
+     },
+     /* 指定如何解析语法 */
+     parser: "@typescript-eslint/parser",
+     /* 继承airbnb的规则 */
+     extends: ["airbnb", "airbnb/hooks"],
+     /**
+      * 下面可以根据自己的开发习惯开启一些规则检查，不建议关闭规则（除非不得已）
+      * "off" 或 0    ==>  关闭规则
+      * "warn" 或 1   ==>  打开的规则作为警告（不影响代码执行）
+      * "error" 或 2  ==>  规则作为一个错误（在配置lint的插件后代码不能执行，界面报错，不建议配置，影响开发调试效率）
+      */
+     rules: {
+       "no-console": 1,
+     },
+   };
+   ```
 
 ### `umi`框架中的规范配置
 
@@ -124,13 +224,11 @@
   ```js
   module.exports = {
     extends: [require.resolve("@umijs/fabric/dist/eslint")],
-
     // in antd-design-pro
     globals: {
       ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: true,
       page: true,
     },
-
     rules: {
       // your rules
     },
