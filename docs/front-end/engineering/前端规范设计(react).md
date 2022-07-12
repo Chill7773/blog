@@ -3,8 +3,9 @@
   - [`stylelint`规范配置](#stylelint规范配置)
   - [`eslint`规范配置](#eslint规范配置)
     - [`React + JS`规范配置](#react--js规范配置)
-    - [`React + TS`规范配置](#react--ts规范配置)
+    - [`React+TS`规范配置](#reactts规范配置)
     - [`umi`框架中的规范配置](#umi框架中的规范配置)
+  - [关于处理 prettier 和 eslint, stylelint 冲突](#关于处理-prettier-和-eslint-stylelint-冲突)
   - [其他规范](#其他规范)
     - [promise 的使用，避免回调地狱](#promise-的使用避免回调地狱)
     - [使用 jsDoc 注释](#使用-jsdoc-注释)
@@ -26,40 +27,36 @@
 2. 新建`.prettierrc.js`文件，复制以下配置
 
    ```js
+   /**
+    * @see https://prettier.io/docs/en/options.html
+    */
    module.exports = {
      // 超过最大值换行
      printWidth: 100,
      // 缩进字节数
      tabWidth: 2,
-     // 使用制表符而不是空格缩进行
-     useTabs: true,
-     // 结尾不用分号(true有，false没有)
+     // 使用空格缩进 不使用tab
+     useTabs: false,
+     // 结尾用分号(true有，false没有)
      semi: true,
-     // 使用单引号(true单双引号，false双引号)
+     // 使用单引号(true单引号，false双引号)
      singleQuote: true,
      // 更改引用对象属性的时间 可选值"<as-needed|consistent|preserve>"
      quoteProps: "as-needed",
-     // 在对象，数组括号与文字之间加空格 "{ foo: bar }"
+     // 在对象，数组括号与文字之间加空格，如："{ foo: bar }"
      bracketSpacing: true,
-     // 多行时尽可能打印尾随逗号。（例如，单行数组永远不会出现逗号结尾。） 可选值"<none|es5|all>"，默认none
+     // 在 HTML, Vue 和 JSX 中，把`>`单独放在下一行
+     bracketSameLine: false,
+     // 在 HTML, Vue 和 JSX 中，强制单个属性一行
+     singleAttributePerLine: true,
+     // 多行时尽可能打印尾随逗号。（单行数组永远不会出现逗号结尾。） 可选值"<none|es5|all>"
      trailingComma: "all",
-     // 在JSX中使用单引号而不是双引号
+     // 在JSX中使用双引号
      jsxSingleQuote: false,
      //  (x) => {} 箭头函数参数只有一个时是否要有小括号。avoid：省略括号 ,always：不省略括号
-     arrowParens: "avoid",
-     // 如果文件顶部已经有一个 doclock，这个选项将新建一行注释，并打上@format标记。
-     insertPragma: false,
-     // 指定要使用的解析器，不需要写文件开头的 @prettier
-     requirePragma: false,
-     // 默认值。因为使用了一些折行敏感型的渲染器（如GitHub comment）而按照markdown文本样式进行折行
-     proseWrap: "preserve",
-     // 在html中空格是否是敏感的 "css" - 遵守CSS显示属性的默认值， "strict" - 空格被认为是敏感的 ，"ignore" - 空格被认为是不敏感的
-     htmlWhitespaceSensitivity: "css",
+     arrowParens: "always",
      // 换行符使用 lf 结尾是 可选值"<auto|lf|crlf|cr>"
      endOfLine: "lf",
-     // 这两个选项可用于格式化以给定字符偏移量（分别包括和不包括）开始和结束的代码
-     rangeStart: 0,
-     rangeEnd: Infinity,
    };
    ```
 
@@ -169,7 +166,7 @@
    };
    ```
 
-### `React + TS`规范配置
+### `React+TS`规范配置
 
 1. 安装相关依赖，主要依赖如下：
 
@@ -200,12 +197,17 @@
      /* 继承airbnb的规则 */
      extends: ["airbnb", "airbnb/hooks"],
      /**
-      * 下面可以根据自己的开发习惯开启一些规则检查，不建议关闭规则（除非不得已）
       * "off" 或 0    ==>  关闭规则
       * "warn" 或 1   ==>  打开的规则作为警告（不影响代码执行）
       * "error" 或 2  ==>  规则作为一个错误（在配置lint的插件后代码不能执行，界面报错，不建议配置，影响开发调试效率）
       */
      rules: {
+       /** 添加".tsx", ".ts" 两个选项去支持jsx语法  */
+       "react/jsx-filename-extension": [
+         1,
+         { extensions: [".js", ".jsx", ".tsx", ".ts"] },
+       ],
+       /** 下面可以根据自己的开发习惯开启一些规则检查，不建议关闭规则（除非不得已）*/
        "no-console": 1,
      },
    };
@@ -253,6 +255,22 @@
   module.exports = {
     ...fabric.prettier,
   };
+  ```
+
+## 关于处理 prettier 和 eslint, stylelint 冲突
+
+- 安装插件 `eslint-config-prettier` 和 `stylelint-config-prettier`，去关闭可能会起冲突的规则：`npm i stylelint-config-prettier eslint-config-prettier --save-dev`
+
+- 在`.eslintrc.js`:
+
+  ```js
+  {
+  "extends": [
+    // other configs ...
+    "stylelint-config-prettier",
+    "prettier" // 继承自eslint-config-prettier
+  ]
+  }
   ```
 
 ## 其他规范
