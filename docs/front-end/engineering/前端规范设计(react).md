@@ -2,7 +2,7 @@
   - [`prettier`规范配置](#prettier规范配置)
   - [`stylelint`规范配置](#stylelint规范配置)
   - [`eslint`规范配置](#eslint规范配置)
-    - [`React + JS`规范配置](#react--js规范配置)
+    - [`React+JS`规范配置](#reactjs规范配置)
     - [`React+TS`规范配置](#reactts规范配置)
     - [`umi`框架中的规范配置](#umi框架中的规范配置)
   - [关于处理 prettier 和 eslint, stylelint 冲突](#关于处理-prettier-和-eslint-stylelint-冲突)
@@ -113,7 +113,7 @@
 
 首先安装`eslint`：`npm install eslint --save-dev`
 
-### `React + JS`规范配置
+### `React+JS`规范配置
 
 1. 安装相关依赖，主要依赖如下：
 
@@ -155,12 +155,19 @@
      /* 继承airbnb的规则 */
      extends: ["airbnb", "airbnb/hooks"],
      /**
-      * 下面可以根据自己的开发习惯开启一些规则检查，不建议关闭规则（除非不得已）
       * "off" 或 0    ==>  关闭规则
       * "warn" 或 1   ==>  打开的规则作为警告（不影响代码执行）
       * "error" 或 2  ==>  规则作为一个错误（在配置lint的插件后代码不能执行，界面报错，不建议配置，影响开发调试效率）
       */
      rules: {
+       // React 17 后可以关闭该规则，不必在使用jsx语法前引入React变量
+       "react/react-in-jsx-scope": 0,
+       // 禁用对函数组件风格一致性的约束
+       "react/function-component-definition": 0,
+       // 用于验证组件props接收数据的合法性，但是需要我们规范组件的风格，为了发挥js的灵活性，可以禁用
+       "react/prop-types": 0,
+
+       /** 下面可以根据自己的开发习惯开启一些规则检查，不建议关闭规则（除非不得已）*/
        "no-console": 1,
      },
    };
@@ -202,7 +209,8 @@
       * "error" 或 2  ==>  规则作为一个错误（在配置lint的插件后代码不能执行，界面报错，不建议配置，影响开发调试效率）
       */
      rules: {
-       /** 添加".tsx", ".ts" 两个选项去支持jsx语法  */
+       /** 可继承上面react+js的规则禁用 */
+       // 添加".tsx", ".ts" 两个选项去支持jsx语法
        "react/jsx-filename-extension": [
          1,
          { extensions: [".js", ".jsx", ".tsx", ".ts"] },
