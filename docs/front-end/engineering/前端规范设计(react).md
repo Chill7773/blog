@@ -94,7 +94,7 @@
 
 ### 与 vscode 配合
 
-- 新建 `.vscode`文件夹，在其下创建`setting.json`配置文件:
+- 新建 `.vscode`文件夹，在其下创建`settings.json`配置文件:
 
   ```json
   {
