@@ -4,25 +4,33 @@
 
 ## 前端
 
-[html+css imooc 笔记](docs/front-end/html+css-imooc-note.md)
-
-[js imooc 笔记](docs/front-end/js-imooc-note.md)
-
-[如何使用 js 获取 gps 和罗盘数据](docs/front-end/如何使用js获取gps和罗盘数据.md)
-
 [移动 web 开发常见问题](docs/front-end/移动web开发常见问题.md)
 
-#### 框架
+### html+css
 
-#### 工程化
+[html+css imooc 笔记](docs/front-end/html+css/html+css-imooc-note.md)
+
+### js+ts
+
+[js imooc 笔记](docs/front-end/js+ts/js-imooc-note.md)
+
+[如何使用 js 获取 gps 和罗盘数据](docs/front-end/js+ts/如何使用js获取gps和罗盘数据.md)
+
+### 框架
+
+### 工程化
 
 [gulp 常用插件](docs/front-end/engineering/gulp常用插件.md)
 
 [如何初始化一个前端工程](docs/front-end/engineering/如何初始化一个前端工程.md)
 
-[前端规范设计(react)](docs/front-end/engineering/%E5%89%8D%E7%AB%AF%E8%A7%84%E8%8C%83%E8%AE%BE%E8%AE%A1(react).md)
+[前端规范设计(react)](docs/front-end/engineering/前端规范设计(react).md)
 
-#### 小程序
+[webpack-imooc-note](docs/front-end/engineering/webpack-imooc-note.md)
+
+[构建工具升级指南](docs/front-end/engineering/构建工具升级指南.md)
+
+### 小程序
 
 [使用 typescript 开发微信小程序](docs/front-end/mini-program/使用typescript开发微信小程序.md)
 

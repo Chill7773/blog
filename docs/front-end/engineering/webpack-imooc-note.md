@@ -1,14 +1,14 @@
 [TOC]
 
-## webpack »ù±¾Ê¹ÓÃ
+## webpack åŸºæœ¬ä½¿ç”¨
 
-#### ²ğ·ÖÅäÖÃºÍ merge
+#### æ‹†åˆ†é…ç½®å’Œ merge
 
-- ´´½¨Èı¸öÎÄ¼ş£º`webpack.common.js`, `webpack.dev.js`, `webpack.prod.js` ·Ö±ğ¶ÔÓ¦¹«¹²ÅäÖÃ£¬¿ª·¢»·¾³Åä£¬Éú²ú»·¾³ÅäÖÃ
-- °²×°`webpack-merge`, Ê¹ÓÃ`const { merge } = require('webpack-merge')` ½øĞĞºÏ²¢¡£
-- Ê¾Àı´úÂë£º
+- åˆ›å»ºä¸‰ä¸ªæ–‡ä»¶ï¼š`webpack.common.js`, `webpack.dev.js`, `webpack.prod.js` åˆ†åˆ«å¯¹åº”å…¬å…±é…ç½®ï¼Œå¼€å‘ç¯å¢ƒé…ï¼Œç”Ÿäº§ç¯å¢ƒé…ç½®
+- å®‰è£…`webpack-merge`, ä½¿ç”¨`const { merge } = require('webpack-merge')` è¿›è¡Œåˆå¹¶ã€‚
+- ç¤ºä¾‹ä»£ç ï¼š
 
-`webpack.common.js`£º
+`webpack.common.js`ï¼š
 
 ```js
 const path = require("path");
@@ -26,10 +26,10 @@ module.exports = {
 };
 ```
 
-`webpack.dev.js`£º
+`webpack.dev.js`ï¼š
 
 ```js
-/* ÂÔ */
+/* ç•¥ */
 const webpackCommonConf = require("./webpack.common.js");
 const { merge } = require("webpack-merge");
 
@@ -37,18 +37,18 @@ module.exports = merge(webpackCommonConf, {
   mode: "development",
   devServer: {
     port: 8080,
-    historyApiFallback: true, // ÈÎºÎÇëÇó¶¼»á·µ»Øindex.htmlÎÄ¼ş£¬ÕâÖ»ÄÜÓÃÓÚÖ»ÓĞÒ»¸ö HTML ÎÄ¼şµÄÓ¦ÓÃ¡£
-    hot: true, // ÆôÓÃ webpack µÄÈÈÄ£¿éÌæ»»ÌØĞÔ
-    progress: true, // ÏÔÊ¾´ò°üµÄ½ø¶ÈÌõ
-    contentBase: distPath, // ¸ùÄ¿Â¼
-    open: true, // ×Ô¶¯´ò¿ªä¯ÀÀÆ÷
-    compress: true, // Æô¶¯ gzip Ñ¹Ëõ
-    // ÉèÖÃ´úÀí ¡ª¡ª Èç¹ûÓĞĞèÒªµÄ»°£¡
+    historyApiFallback: true, // ä»»ä½•è¯·æ±‚éƒ½ä¼šè¿”å›index.htmlæ–‡ä»¶ï¼Œè¿™åªèƒ½ç”¨äºåªæœ‰ä¸€ä¸ª HTML æ–‡ä»¶çš„åº”ç”¨ã€‚
+    hot: true, // å¯ç”¨ webpack çš„çƒ­æ¨¡å—æ›¿æ¢ç‰¹æ€§
+    progress: true, // æ˜¾ç¤ºæ‰“åŒ…çš„è¿›åº¦æ¡
+    contentBase: distPath, // æ ¹ç›®å½•
+    open: true, // è‡ªåŠ¨æ‰“å¼€æµè§ˆå™¨
+    compress: true, // å¯åŠ¨ gzip å‹ç¼©
+    // è®¾ç½®ä»£ç† â€”â€” å¦‚æœæœ‰éœ€è¦çš„è¯ï¼
     proxy: {
-      // ½«±¾µØ /api/xxx ´úÀíµ½ localhost:3000/api/xxx
+      // å°†æœ¬åœ° /api/xxx ä»£ç†åˆ° localhost:3000/api/xxx
       "/api": "http://localhost:3000",
 
-      // ½«±¾µØ /api2/xxx ´úÀíµ½ localhost:3000/xxx
+      // å°†æœ¬åœ° /api2/xxx ä»£ç†åˆ° localhost:3000/xxx
       "/api2": {
         target: "http://localhost:3000",
         pathRewrite: {
@@ -66,10 +66,10 @@ module.exports = merge(webpackCommonConf, {
 });
 ```
 
-`webpack.prod.js`£º
+`webpack.prod.js`ï¼š
 
 ```js
-/* ÂÔ */
+/* ç•¥ */
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const webpackCommonConf = require("./webpack.common.js");
 const { merge } = require("webpack-merge");
@@ -77,12 +77,12 @@ const { merge } = require("webpack-merge");
 module.exports = merge(webpackCommonConf, {
   mode: "production",
   output: {
-    filename: "bundle.[contenthash:8].js", // ´ò°ü´úÂëÊ±£¬¼ÓÉÏ hash ´Á
+    filename: "bundle.[contenthash:8].js", // æ‰“åŒ…ä»£ç æ—¶ï¼ŒåŠ ä¸Š hash æˆ³
     path: distPath,
-    // publicPath: 'http://cdn.abc.com'  // ĞŞ¸ÄËùÓĞ¾²Ì¬ÎÄ¼ş url µÄÇ°×º£¨Èç cdn ÓòÃû£©£¬ÕâÀïÔİÊ±ÓÃ²»µ½
+    // publicPath: 'http://cdn.abc.com'  // ä¿®æ”¹æ‰€æœ‰é™æ€æ–‡ä»¶ url çš„å‰ç¼€ï¼ˆå¦‚ cdn åŸŸåï¼‰ï¼Œè¿™é‡Œæš‚æ—¶ç”¨ä¸åˆ°
   },
   plugins: [
-    new CleanWebpackPlugin(), // »áÄ¬ÈÏÇå¿Õ output.path ÎÄ¼ş¼Ğ
+    new CleanWebpackPlugin(), // ä¼šé»˜è®¤æ¸…ç©º output.path æ–‡ä»¶å¤¹
     new webpack.DefinePlugin({
       // window.ENV = 'production'
       ENV: JSON.stringify("production"),
@@ -91,11 +91,11 @@ module.exports = merge(webpackCommonConf, {
 });
 ```
 
-#### Æô¶¯±¾µØ·şÎñ
+#### å¯åŠ¨æœ¬åœ°æœåŠ¡
 
-- °²×°`webpack-dev-server` Ä£¿é
-- ÅäÖÃ`devServer`Ñ¡Ïî£¨ÔÚÉÏÊöÊ¾Àı´úÂëÖĞÓĞÕ¹Ê¾£©
-- ÔÚ`package.json` ÖĞÅäÖÃ£º
+- å®‰è£…`webpack-dev-server` æ¨¡å—
+- é…ç½®`devServer`é€‰é¡¹ï¼ˆåœ¨ä¸Šè¿°ç¤ºä¾‹ä»£ç ä¸­æœ‰å±•ç¤ºï¼‰
+- åœ¨`package.json` ä¸­é…ç½®ï¼š
 
 ```json
 {
@@ -109,9 +109,9 @@ module.exports = merge(webpackCommonConf, {
 }
 ```
 
-#### ´¦Àí es6
+#### å¤„ç† es6
 
-- ĞÂ½¨`.babelrc`£º
+- æ–°å»º`.babelrc`ï¼š
 
 ```json
 {
@@ -120,14 +120,14 @@ module.exports = merge(webpackCommonConf, {
 }
 ```
 
-- °²×°`@babel/core`, `@babel/preset-env`, `babel-loader`
+- å®‰è£…`@babel/core`, `@babel/preset-env`, `babel-loader`
 
-- ÅäÖÃ webpack ÅäÖÃÎÄ¼ş£º
+- é…ç½® webpack é…ç½®æ–‡ä»¶ï¼š
 
 ```js
-/* ÂÔ */
+/* ç•¥ */
 module.exports = {
-  /* ÂÔ */
+  /* ç•¥ */
   module: {
     rules: [
       {
@@ -141,11 +141,11 @@ module.exports = {
 };
 ```
 
-#### ´¦ÀíÑùÊ½
+#### å¤„ç†æ ·å¼
 
-- °²×°Ïà¹Ø`loader`
+- å®‰è£…ç›¸å…³`loader`
 
-- ÅäÖÃ`postcss.config.js`, °²×°`autoprefixer`(Ôö¼Ó css Ç°×º)
+- é…ç½®`postcss.config.js`, å®‰è£…`autoprefixer`(å¢åŠ  css å‰ç¼€)
 
 ```js
 module.exports = {
@@ -153,22 +153,22 @@ module.exports = {
 };
 ```
 
-- ÅäÖÃ webpack ÅäÖÃÎÄ¼ş£º
+- é…ç½® webpack é…ç½®æ–‡ä»¶ï¼š
 
 ```js
-/* ÂÔ */
+/* ç•¥ */
 module.exports = {
-  /* ÂÔ */
+  /* ç•¥ */
   module: {
     rules: [
       {
         test: /\.css$/,
-        // loader µÄÖ´ĞĞË³ĞòÊÇ£º´ÓºóÍùÇ°
-        use: ["style-loader", "css-loader", "postcss-loader"], // ¼ÓÁË postcss
+        // loader çš„æ‰§è¡Œé¡ºåºæ˜¯ï¼šä»åå¾€å‰
+        use: ["style-loader", "css-loader", "postcss-loader"], // åŠ äº† postcss
       },
       {
         test: /\.less$/,
-        // Ôö¼Ó 'less-loader' £¬×¢ÒâË³Ğò
+        // å¢åŠ  'less-loader' ï¼Œæ³¨æ„é¡ºåº
         use: ["style-loader", "css-loader", "less-loader"],
       },
     ],
@@ -176,18 +176,18 @@ module.exports = {
 };
 ```
 
-#### ´¦ÀíÍ¼Æ¬
+#### å¤„ç†å›¾ç‰‡
 
-- °²×°Ïà¹Ø`loader`
+- å®‰è£…ç›¸å…³`loader`
 
-- dev »·¾³ÏÂ£º
+- dev ç¯å¢ƒä¸‹ï¼š
 
 ```js
 module.exports = {
-  /* ÂÔ */
+  /* ç•¥ */
   module: {
     rules: [
-      // Ö±½ÓÒıÈëÍ¼Æ¬ url
+      // ç›´æ¥å¼•å…¥å›¾ç‰‡ url
       {
         test: /\.(png|jpg|jpeg|gif)$/,
         use: "file-loader",
@@ -197,27 +197,27 @@ module.exports = {
 };
 ```
 
-- prod »·¾³ÏÂ£º
+- prod ç¯å¢ƒä¸‹ï¼š
 
 ```js
 module.exports = {
-  /* ÂÔ */
+  /* ç•¥ */
   module: {
     rules: [
-      // Í¼Æ¬ - ¿¼ÂÇ base64 ±àÂëµÄÇé¿ö
+      // å›¾ç‰‡ - è€ƒè™‘ base64 ç¼–ç çš„æƒ…å†µ
       {
         test: /\.(png|jpg|jpeg|gif)$/,
         use: {
           loader: "url-loader",
           options: {
-            // Ğ¡ÓÚ 5kb µÄÍ¼Æ¬ÓÃ base64 ¸ñÊ½²ú³ö
-            // ·ñÔò£¬ÒÀÈ»ÑÓÓÃ file-loader µÄĞÎÊ½£¬²ú³ö url ¸ñÊ½
+            // å°äº 5kb çš„å›¾ç‰‡ç”¨ base64 æ ¼å¼äº§å‡º
+            // å¦åˆ™ï¼Œä¾ç„¶å»¶ç”¨ file-loader çš„å½¢å¼ï¼Œäº§å‡º url æ ¼å¼
             limit: 5 * 1024,
 
-            // ´ò°üµ½ img Ä¿Â¼ÏÂ
+            // æ‰“åŒ…åˆ° img ç›®å½•ä¸‹
             outputPath: "/img1/",
 
-            // ÉèÖÃÍ¼Æ¬µÄ cdn µØÖ·£¨Ò²¿ÉÒÔÍ³Ò»ÔÚÍâÃæµÄ output ÖĞÉèÖÃ£¬ÄÇ½«×÷ÓÃÓÚËùÓĞ¾²Ì¬×ÊÔ´£©
+            // è®¾ç½®å›¾ç‰‡çš„ cdn åœ°å€ï¼ˆä¹Ÿå¯ä»¥ç»Ÿä¸€åœ¨å¤–é¢çš„ output ä¸­è®¾ç½®ï¼Œé‚£å°†ä½œç”¨äºæ‰€æœ‰é™æ€èµ„æºï¼‰
             // publicPath: 'http://cdn.abc.com'
           },
         },
@@ -227,8 +227,8 @@ module.exports = {
 };
 ```
 
-## webpack ¸ß¼¶ÌØĞÔ
+## webpack é«˜çº§ç‰¹æ€§
 
-## webpack ĞÔÄÜÓÅ»¯
+## webpack æ€§èƒ½ä¼˜åŒ–
 
-## babel Ê¹ÓÃºÍÅäÖÃ
+## babel ä½¿ç”¨å’Œé…ç½®
