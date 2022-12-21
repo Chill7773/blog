@@ -2,21 +2,37 @@
 
 一些完成且我觉得值得分享的内容，我整理并会分享到我的[掘金](https://juejin.cn/user/748106242076744/posts)
 
+- [前端](#前端)
+  - [html \& css](#html--css)
+  - [js \& ts](#js--ts)
+  - [Vue](#vue)
+  - [React](#react)
+  - [工程化](#工程化)
+  - [小程序](#小程序)
+  - [Others](#others)
+- [研发笔记](#研发笔记)
+- [后端](#后端)
+- [devOps](#devops)
+- [设计模式](#设计模式)
+- [其他](#其他)
+
 ## 前端
 
-[移动 web 开发常见问题](docs/front-end/移动web开发常见问题.md)
+### html & css
 
-### html+css
+[可编辑元素——textarea 替代方案](docs/front-end/2022/可编辑元素——textarea替代方案.md)
 
 [html+css imooc 笔记](docs/front-end/html+css/html+css-imooc-note.md)
 
-### js+ts
+### js & ts
 
 [js imooc 笔记](docs/front-end/js+ts/js-imooc-note.md)
 
 [如何使用 js 获取 gps 和罗盘数据](docs/front-end/js+ts/如何使用js获取gps和罗盘数据.md)
 
-### 框架
+### Vue
+
+### React
 
 ### 工程化
 
@@ -24,7 +40,7 @@
 
 [如何初始化一个前端工程](docs/front-end/engineering/如何初始化一个前端工程.md)
 
-[前端规范设计(react)](docs/front-end/engineering/前端规范设计(react).md)
+[前端规范设计(react)](<docs/front-end/engineering/前端规范设计(react).md>)
 
 [webpack-imooc-note](docs/front-end/engineering/webpack-imooc-note.md)
 
@@ -39,6 +55,10 @@
 [文件操作——钉钉小程序篇](docs/front-end/mini-program/文件操作——钉钉小程序篇.md)
 
 [钉钉小程序和微信小程序对比](docs/front-end/mini-program/钉钉小程序和微信小程序对比.md)
+
+### Others
+
+[移动 web 开发常见问题](docs/front-end/移动web开发常见问题.md)
 
 ## 研发笔记
 
